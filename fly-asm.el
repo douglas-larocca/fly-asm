@@ -3,7 +3,6 @@
 ;; Author: Douglas La Rocca <larocca@larocca.io>
 ;; URL: https://github.com/douglas-larocca/fly-asm
 ;; Version: 0.1.3
-;; Package-Requires: ((emacs "24") nasm-mode)
 
 ;;; Commentary:
 
@@ -13,27 +12,11 @@
 
 (require 'nasm-mode)
 
-(defun fly-asm-filter-directives (buffer)
-  "XXX not finished, replace regexp below with
-regular expressions to test"
-  (with-current-buffer buffer
-    (save-excursion
-      (goto-char 0)
-      (while (not (eobp))
-        (beginning-of-line)
-        (if (or (looking-at "regexp"))
-            (let ((eol (save-excursion (end-of-line) (point))))
-              (delete-region (point) eol)))
-        (forward-line)))))
-
-(defun trim-string (string)
-  "Remove white spaces in beginning and ending of STRING.
-White space here is any of: space, tab, newline."
-  (replace-regexp-in-string "\\`[ \t\n]*" ""
-                            (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
-
 (defgroup fly-asm nil
-  "fly-asm"
+  "Minor mode for inspecting C/C++ compiler output"
+  :prefix "fly-asm-"
+  :link '(url-link :tag "Website for fly-asm"
+                   "https://github.com/douglas-larocca/fly-asm")
   :group 'programming)
 
 (defcustom fly-asm-dialect "intel"
@@ -63,6 +46,25 @@ White space here is any of: space, tab, newline."
   :type 'list
   :group 'fly-asm)
 
+(defun fly-asm-filter-directives (buffer)
+  "XXX not finished, replace regexp below with
+regular expressions to test"
+  (with-current-buffer buffer
+    (save-excursion
+      (goto-char 0)
+      (while (not (eobp))
+        (beginning-of-line)
+        (if (or (looking-at "regexp"))
+            (let ((eol (save-excursion (end-of-line) (point))))
+              (delete-region (point) eol)))
+        (forward-line)))))
+
+(defun fly-asm-trim-string (string)
+  "Remove white spaces in beginning and ending of STRING.
+White space here is any of: space, tab, newline."
+  (replace-regexp-in-string "\\`[ \t\n]*" ""
+                            (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
+
 (defun fly-asm-command-fstring ()
   (mapconcat 'identity
              (append fly-asm-compiler-options
@@ -83,7 +85,7 @@ White space here is any of: space, tab, newline."
         (if moving (goto-char (process-mark proc)))))))
 
 (defun fly-asm-process-sentinel (proc event)
-  (let ((e (trim-string event)))
+  (let ((e (fly-asm-trim-string event)))
     (pcase e
       (`"finished"
        (display-buffer (process-buffer proc) 'other-window))
@@ -164,6 +166,15 @@ White space here is any of: space, tab, newline."
   :keymap fly-asm-mode-map
   :group 'fly-asm)
 
-(provide 'fly-asm)
+;;;###autoload
+(defun fly-asm-mode-enable ()
+  "Enable `fly-asm-mode'."
+  (fly-asm-mode 1))
 
+;;;###autoload
+(defun fly-asm-mode-disable ()
+  "Disable `fly-asm-mode'."
+  (fly-asm-mode 0))
+
+(provide 'fly-asm)
 ;;; fly-asm.el ends here
