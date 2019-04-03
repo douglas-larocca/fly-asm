@@ -2,7 +2,7 @@
 
 ;; Author: Douglas La Rocca <larocca@larocca.io>
 ;; URL: https://github.com/douglas-larocca/fly-asm
-;; Version: 0.1.3
+;; Version: 0.1.4
 
 ;;; Commentary:
 
