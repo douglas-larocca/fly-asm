@@ -5,12 +5,12 @@ EMACS   = emacs
 LDFLAGS = -L lib/nasm-mode
 BATCH   = $(EMACS) -Q -batch -L . $(LDFLAGS)
 COMPILE = $(BATCH) -f batch-byte-compile
-VERSION = 0.1.2
+VERSION = 0.1.3
 
 EL = fly-asm.el
 ELC = $(EL:.el=.elc)
 PKG = fly-asm-pkg.el
-DIST = $(PKG) $(EL) README.md UNLICENSE
+DIST = $(PKG) $(EL) fly-asm.rcp README.md UNLICENSE
 
 compile: $(ELC)
 all: compile package

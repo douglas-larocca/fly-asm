@@ -1,0 +1,5 @@
+(:name fly-asm
+       :depends nasm-mode
+       :type github
+       :description "Minor mode for inspecting C/C++ compiler output"
+       :pkgname "douglas-larocca/fly-asm")
